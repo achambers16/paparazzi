@@ -145,11 +145,15 @@ extern uint16_t autopilot_flight_time;
 #ifndef THRESHOLD_GROUND_DETECT
 #define THRESHOLD_GROUND_DETECT 25.0
 #endif
+
 /** Ground detection based on vertical acceleration.
+ *  If a sharp acceleration is felt, we assume that we have hit the ground.
+ *  This threshold is defined by THRESHOLD_GROUND_DETECT (units m/s^2)
  */
 static inline void DetectGroundEvent(void) {
   if (autopilot_mode == AP_MODE_FAILSAFE || autopilot_detect_ground_once) {
     struct NedCoor_f* accel = stateGetAccelNed_f();
+    // TODO: Should we look for the magnitude of the total acceleration? So we detect if we crash sideways?
     if (accel->z < -THRESHOLD_GROUND_DETECT ||
         accel->z > THRESHOLD_GROUND_DETECT) {
       autopilot_ground_detected = TRUE;
