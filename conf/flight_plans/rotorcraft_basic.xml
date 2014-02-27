@@ -1,6 +1,6 @@
 <!DOCTYPE flight_plan SYSTEM "flight_plan.dtd">
 
-<flight_plan alt="152" ground_alt="147" lat0="43 33 50.83" lon0="1 28 52.61" max_dist_from_home="400" name="Booz Test Enac" security_height="2">
+<flight_plan alt="152" ground_alt="147" lat0="43 33 50.83" lon0="1 28 52.61" max_dist_from_home="20" name="Booz Test Enac" security_height="2">
   <header>
 #include "autopilot.h"
   </header>
@@ -25,7 +25,7 @@
       <call fun="NavSetGroundReferenceHere()"/>
       <!--<call fun="NavSetAltitudeReferenceHere()"/>-->
     </block>
-    <block name="Holding point">
+    <block name="Holding point" key="k">
       <call fun="NavKillThrottle()"/>
       <attitude pitch="0" roll="0" throttle="0" vmode="throttle" until="FALSE"/>
     </block>
@@ -63,7 +63,7 @@
     <block name="circle">
       <circle radius="nav_radius" wp="p1"/>
     </block>
-    <block name="land here" strip_button="Land Here" strip_icon="land-right.png">
+    <block name="land here" strip_button="Land Here" strip_icon="land-right.png" key="l">
       <call fun="NavSetWaypointHere(WP_TD)"/>
     </block>
     <block name="land">
@@ -76,6 +76,7 @@
       <stay climb="-0.8" vmode="climb" wp="TD"/>
     </block>
     <block name="landed">
+      <call fun="NavKillThrottle()"/>
       <attitude pitch="0" roll="0" throttle="0" vmode="throttle" until="FALSE"/>
     </block>
   </blocks>
