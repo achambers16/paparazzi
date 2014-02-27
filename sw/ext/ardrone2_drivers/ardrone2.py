@@ -309,8 +309,10 @@ elif args.command == 'upload_paparazzi':
     ftp.storbinary("STOR " + args.folder + "/" + f[1], file(args.file, "rb"))
     sleep(0.5)
     execute_command("chmod 777 /data/video/" + args.folder + "/" + f[1])
-    execute_command("/data/video/" + args.folder + "/" + f[1] + " > /dev/null 2>&1 &")
-    print("#pragma message: Upload and Start of ap.elf to ARDrone2 Succes!")
+    #execute_command("/data/video/" + args.folder + "/" + f[1] + " > /dev/null 2>&1 &")
+    #print("#pragma message: Upload and Start of ap.elf to ARDrone2 Succes!")
+
+    print("Warning: Upload successfully but NOT automatically running! Configured by Andrew...")
 
 
 
