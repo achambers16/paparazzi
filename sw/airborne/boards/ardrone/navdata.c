@@ -404,6 +404,64 @@ static void baro_update_logic(void)
 //  printf(",%d,%d",spike_detected,spikes);
 }
 
+#define MAGNETO_BUFFER 20
+static void magneto_monitoring_logic(void)
+{
+    static uint16_t i = 0;
+    static int16_t last_mx[MAGNETO_BUFFER];
+    static int16_t last_my[MAGNETO_BUFFER];
+    static int16_t last_mz[MAGNETO_BUFFER];
+    static bool_t reboot_lockout = FALSE;
+
+    if (last_mx != 0 && last_my != 0 && last_mz != 0)
+    {
+        //printf("i: %u\n", i);
+
+
+        bool_t failed = TRUE;
+        int j = 0;
+        for (j = 0; j < MAGNETO_BUFFER; j++)
+        {
+            if (last_mx[j] != navdata.mx || last_my[j] != navdata.my || last_mz[j] != navdata.mz)
+            {
+                failed = FALSE;
+                reboot_lockout = FALSE;
+                break;
+            }
+        }
+
+        if (failed && reboot_lockout)
+        {
+        	reboot_lockout = TRUE;
+
+            printf("Magnetometer broken! Need to reboot it?\n");
+            // The magnetometer on the nav board has stopped
+            // Reboot the nav board
+
+            //system("/bin/program.elf -emergency.restart &");
+            //system("/bin/program.elf -360p.slices 0 -live.tcp &");
+
+            system("/bin/program.elf&");
+            sleep(2);
+            //usleep(100000);
+            system("killall -9 program.elf");
+            //usleep(100000);
+            sleep(2);
+
+
+            // start acquisition
+            uint8_t cmd = 0x01;
+            navdata_write(&cmd, 1);
+        }
+    }
+
+    last_mx[i%MAGNETO_BUFFER] = navdata.mx;
+    last_my[i%MAGNETO_BUFFER] = navdata.my;
+    last_mz[i%MAGNETO_BUFFER] = navdata.mz;
+    i++;
+
+}
+
 void navdata_update()
 {
   static bool_t last_checksum_wrong = FALSE;
@@ -444,6 +502,8 @@ void navdata_update()
       }
       nav_port.last_packet_number = navdata.nu_trame;
       //printf("%d\r",navdata.nu_trame);
+
+      magneto_monitoring_logic();
 
       // When we already dropped a packet or checksum is correct
       if(last_checksum_wrong || navdata.chksum == checksum) {
