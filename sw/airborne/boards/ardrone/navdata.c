@@ -51,6 +51,8 @@ navdata_port nav_port;
 static int nav_fd = 0;
 measures_t navdata;
 
+bool_t reboot_lockout;
+
 #include "subsystems/sonar.h"
 uint16_t sonar_meas = 0;
 
@@ -196,6 +198,8 @@ bool_t navdata_init()
   nav_port.packetsRead = 0;
   nav_port.isInitialized = TRUE;
   nav_port.last_packet_number = 0;
+
+  reboot_lockout = FALSE;
 
 #if PERIODIC_TELEMETRY
   register_periodic_telemetry(DefaultPeriodic, "ARDRONE_NAVDATA", send_navdata);
@@ -411,7 +415,6 @@ static void magneto_monitoring_logic(void)
     static int16_t last_mx[MAGNETO_BUFFER];
     static int16_t last_my[MAGNETO_BUFFER];
     static int16_t last_mz[MAGNETO_BUFFER];
-    static bool_t reboot_lockout = FALSE;
 
     if (last_mx != 0 && last_my != 0 && last_mz != 0)
     {
@@ -430,11 +433,14 @@ static void magneto_monitoring_logic(void)
             }
         }
 
-        if (failed && reboot_lockout)
+        if (failed && !reboot_lockout)
         {
         	reboot_lockout = TRUE;
 
             printf("Magnetometer broken! Need to reboot it?\n");
+            system("/bin/restart_nav.sh&");
+
+            /*
             // The magnetometer on the nav board has stopped
             // Reboot the nav board
 
@@ -442,16 +448,17 @@ static void magneto_monitoring_logic(void)
             //system("/bin/program.elf -360p.slices 0 -live.tcp &");
 
             system("/bin/program.elf&");
-            sleep(2);
-            //usleep(100000);
+            usleep(100000);
             system("killall -9 program.elf");
-            //usleep(100000);
-            sleep(2);
+            usleep(100000);
 
 
             // start acquisition
             uint8_t cmd = 0x01;
             navdata_write(&cmd, 1);
+
+ */
+
         }
     }
 
