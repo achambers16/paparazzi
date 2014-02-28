@@ -58,6 +58,9 @@
 #define GUIDANCE_H_MODE_CARE_FREE   6
 #define GUIDANCE_H_MODE_FORWARD     7
 
+#ifndef GUIDANCE_H_MAX_BANK
+#define GUIDANCE_H_MAX_BANK RadOfDeg(20)
+#endif
 
 extern uint8_t guidance_h_mode;
 extern bool_t guidance_h_use_ref;

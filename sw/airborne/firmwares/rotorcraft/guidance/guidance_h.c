@@ -52,10 +52,6 @@
 #endif
 #endif
 
-#ifndef GUIDANCE_H_MAX_BANK
-#define GUIDANCE_H_MAX_BANK RadOfDeg(20)
-#endif
-
 PRINT_CONFIG_VAR(GUIDANCE_H_USE_REF)
 PRINT_CONFIG_VAR(GUIDANCE_H_USE_SPEED_REF)
 
@@ -463,8 +459,12 @@ static void guidance_h_traj_run(bool_t in_flight) {
 
   /* compute a better approximation of force commands by taking thrust into account */
   if (guidance_h_approx_force_by_thrust && in_flight) {
-    static int32_t thrust_cmd_filt;
     int32_t vertical_thrust = (stabilization_cmd[COMMAND_THRUST] * guidance_v_thrust_coeff) >> INT32_TRIG_FRAC;
+
+    // Initial value but it will filter it soon
+    static int32_t thrust_cmd_filt = (vertical_thrust) / (GUIDANCE_H_THRUST_CMD_FILTER + 1);
+
+    // Sliding window low pass filter
     thrust_cmd_filt = (thrust_cmd_filt * GUIDANCE_H_THRUST_CMD_FILTER + vertical_thrust) / (GUIDANCE_H_THRUST_CMD_FILTER + 1);
     guidance_h_cmd_earth.x = ANGLE_BFP_OF_REAL(atan2f((guidance_h_cmd_earth.x * MAX_PPRZ / INT32_ANGLE_PI_2), thrust_cmd_filt));
     guidance_h_cmd_earth.y = ANGLE_BFP_OF_REAL(atan2f((guidance_h_cmd_earth.y * MAX_PPRZ / INT32_ANGLE_PI_2), thrust_cmd_filt));

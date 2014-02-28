@@ -43,6 +43,7 @@
 
 
 /** Update frequency
+ * For example when GV_FREQ_FRAC = 9, the frequency is 512Hz.
  */
 #define GV_FREQ_FRAC 9
 #define GV_FREQ (1<<GV_FREQ_FRAC)
@@ -67,7 +68,7 @@ extern int32_t gv_zd_ref;
 
 /** reference model altitude in meters (output)
  *  fixed point representation with #GV_Z_REF_FRAC
- *  Q37.26 :
+ *  Q37.26 : accuracy 1.49e-8 , range 1.37e11m
  */
 extern int64_t gv_z_ref;
 

@@ -233,12 +233,15 @@ void guidance_v_run(bool_t in_flight) {
   // AKA SUPERVISION and co
   guidance_v_thrust_coeff = get_vertical_thrust_coeff();
   if (in_flight) {
-    int32_t vertical_thrust = (stabilization_cmd[COMMAND_THRUST] * guidance_v_thrust_coeff) >> INT32_TRIG_FRAC;
-    gv_adapt_run(stateGetAccelNed_i()->z, vertical_thrust, guidance_v_zd_ref);
+	  int32_t vertical_thrust = (stabilization_cmd[COMMAND_THRUST] * guidance_v_thrust_coeff) >> INT32_TRIG_FRAC;
+
+	  if (guidance_v_adapt_throttle_enabled) {
+		  gv_adapt_run(stateGetAccelNed_i()->z, vertical_thrust, guidance_v_zd_ref);
+	  }
   }
   else {
-    /* reset estimate while not in_flight */
-    gv_adapt_init();
+	  /* reset estimate while not in_flight */
+	  gv_adapt_init();
   }
 
   switch (guidance_v_mode) {
@@ -317,7 +320,8 @@ void guidance_v_run(bool_t in_flight) {
 
 /// get the cosine of the angle between thrust vector and gravity vector
 static int32_t get_vertical_thrust_coeff(void) {
-  static const int32_t max_bank_coef = BFP_OF_REAL(RadOfDeg(30.), INT32_TRIG_FRAC);
+	//FIXME Allow this max_bank_coef to be set as a parameter. Currently hardcoded to 30 degrees.
+  static const int32_t max_bank_coef = BFP_OF_REAL(GUIDANCE_H_MAX_BANK, INT32_TRIG_FRAC);
 
   struct Int32RMat* att = stateGetNedToBodyRMat_i();
   /* thrust vector:
@@ -335,8 +339,13 @@ static int32_t get_vertical_thrust_coeff(void) {
    *  dot(v1, v2) = v1.z * v2.z = v2.z
    */
   int32_t coef = att->m[8];
+
+  // Does it make sense to limit the coef based on the max bank?
+  // Perhaps we should limit it based on the GUIDANCE_H_MAX_BANK
+  // or we want to compensat for uncontrolled banks (example from wind)
   if (coef < max_bank_coef)
     coef = max_bank_coef;
+
   return coef;
 }
 
@@ -376,12 +385,14 @@ static void run_hover_loop(bool_t in_flight) {
   const int32_t g_m_zdd = (int32_t)BFP_OF_REAL(9.81, FF_CMD_FRAC) -
                           (guidance_v_zdd_ref << (FF_CMD_FRAC - INT32_ACCEL_FRAC));
 
+  /* feed forward command
+   * guidance_v_thrust_coeff is a unit-less factor that compensates for the known pitch & roll of the vehicle
+   */
   guidance_v_ff_cmd = g_m_zdd / inv_m;
-  /* feed forward command */
   guidance_v_ff_cmd = (guidance_v_ff_cmd << INT32_TRIG_FRAC) / guidance_v_thrust_coeff;
 
   /* bound the nominal command to 0.9*MAX_PPRZ */
-  Bound(guidance_v_ff_cmd, 0, 8640);
+  Bound(guidance_v_ff_cmd, 0, 8640); // Why does it make sense to bound it now?
 
 
   /* our error feed back command                   */

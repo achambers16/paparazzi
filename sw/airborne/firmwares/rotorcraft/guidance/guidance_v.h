@@ -33,10 +33,10 @@
 #include "firmwares/rotorcraft/guidance/guidance_v_adapt.h"
 
 #define GUIDANCE_V_MODE_KILL      0
-#define GUIDANCE_V_MODE_RC_DIRECT 1
-#define GUIDANCE_V_MODE_RC_CLIMB  2
-#define GUIDANCE_V_MODE_CLIMB     3
-#define GUIDANCE_V_MODE_HOVER     4
+#define GUIDANCE_V_MODE_RC_DIRECT 1 /// Direct control of the vehicle's thrust with the remote control
+#define GUIDANCE_V_MODE_RC_CLIMB  2 /// Control the vehicle's vertical speed with the remote control
+#define GUIDANCE_V_MODE_CLIMB     3 /// Vertical velocity control?
+#define GUIDANCE_V_MODE_HOVER     4 /// Vertical position control?
 #define GUIDANCE_V_MODE_NAV       5
 
 extern uint8_t guidance_v_mode;

@@ -116,13 +116,19 @@ void gv_update_ref_from_z_sp(int32_t z_sp) {
   }
 }
 
-
+/* Updates the reference model from a vertical velocity setpoint
+ *
+ * @param zd_sp vertical velocity setpoint
+ */
 void gv_update_ref_from_zd_sp(int32_t zd_sp) {
 
-  gv_z_ref  += gv_zd_ref;
+  /* Propagating the model forward in time
+   *
+   */
+  gv_z_ref  += gv_zd_ref; // times dt?
   gv_zd_ref += gv_zdd_ref;
 
-  int32_t zd_err = gv_zd_ref - (zd_sp>>(INT32_SPEED_FRAC - GV_ZD_REF_FRAC));
+  int32_t zd_err = gv_zd_ref - (zd_sp>>(INT32_SPEED_FRAC - GV_ZD_REF_FRAC)); // Align speed fixed point representation to zd representation
   int32_t zd_err_zdd_res = zd_err>>(GV_ZD_REF_FRAC-GV_ZDD_REF_FRAC);
   gv_zdd_ref = (-(int32_t)GV_REF_INV_THAU * zd_err_zdd_res)>>GV_REF_INV_THAU_FRAC;
 
