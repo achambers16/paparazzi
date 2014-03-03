@@ -30,7 +30,9 @@
   </firmware>
 
   <modules main_freq="512">
-    <load name="gps_ubx_ucenter.xml"/>
+    <load name="gps_ubx_ucenter.xml">
+      <define name="GPS_UBX_NAV5_DYNAMICS" value="NAV5_DYN_PORTABLE" />
+    </load>
     <load name="send_imu_mag_current.xml"/>
   </modules>
 
