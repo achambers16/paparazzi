@@ -59,6 +59,7 @@ void parse_nmea_GPGGA(void);
 
 
 void gps_impl_init( void ) {
+  NMEA_PRINT("NMEA GPS init!!!!!!!!!");
   gps_nmea.msg_available = FALSE;
   gps_nmea.pos_available = FALSE;
   gps_nmea.gps_nb_ovrn = 0;
@@ -173,7 +174,7 @@ void parse_nmea_GPRMC(void) {
   // get speed
   double speed = strtod(&gps_nmea.msg_buf[i], &endptr);
   gps.gspeed = speed * 1.852 * 100 / (60*60);
-  NMEA_PRINT("p_GPRMC() - ground-speed=%d knot = %d cm/s\n\r", (speed*1000), (gps.gspeed*1000));
+  NMEA_PRINT("p_GPRMC() - ground-speed=%lf knot = %d cm/s\n\r", (speed*1000), (gps.gspeed*1000));
   while(gps_nmea.msg_buf[i++] != ',') {              // next field: course
     if (i >= gps_nmea.msg_len) {
       NMEA_PRINT("p_GPRMC() - skipping incomplete message\n\r");
@@ -182,7 +183,7 @@ void parse_nmea_GPRMC(void) {
   }
   double course = strtod(&gps_nmea.msg_buf[i], &endptr);
   gps.course = RadOfDeg(course) * 1e7;
-  NMEA_PRINT("COURSE: %d \n\r",gps_course);
+  NMEA_PRINT("COURSE: %d \n\r",gps.course);
 }
 
 
@@ -239,7 +240,7 @@ void parse_nmea_GPGGA(void) {
   lla_f.lat = RadOfDeg(lat);
 
   gps.lla_pos.lat = lla_f.lat * 1e7; // convert to fixed-point
-  NMEA_PRINT("p_GPGGA() - lat=%d gps_lat=%i\n\r", (lat*1000), lla_f.lat);
+  NMEA_PRINT("p_GPGGA() - lat=%lf gps_lat=%f\n\r", (lat*1000), lla_f.lat);
 
 
   while(gps_nmea.msg_buf[i++] != ',') {              // next field: longitude
@@ -267,7 +268,7 @@ void parse_nmea_GPGGA(void) {
   lla_f.lon = RadOfDeg(lon);
 
   gps.lla_pos.lon = lla_f.lon * 1e7; // convert to fixed-point
-  NMEA_PRINT("p_GPGGA() - lon=%d gps_lon=%i time=%u\n\r", (lon*1000), lla_f.lon, gps.tow);
+  NMEA_PRINT("p_GPGGA() - lon=%lf gps_lon=%f time=%u\n\r", (lon*1000), lla_f.lon, gps.tow);
 
 
   while(gps_nmea.msg_buf[i++] != ',') {              // next field: position fix status
@@ -408,6 +409,9 @@ void nmea_parse_msg( void ) {
  * after a full line.
  */
 void nmea_parse_char( uint8_t c ) {
+
+//  NMEA_PRINT("%c", c);
+
   //reject empty lines
   if (gps_nmea.msg_len == 0) {
     if (c == '\r' || c == '\n' || c == '$')

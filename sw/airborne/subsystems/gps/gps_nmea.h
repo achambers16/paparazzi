@@ -33,8 +33,11 @@
 
 #define GPS_NB_CHANNELS 16
 
+#define DEBUG_NMEA TRUE
+
 #ifdef DEBUG_NMEA
-#define NMEA_PRINT(...) {  UsbSPrintString( __VA_ARGS__);};
+#include <stdio.h>
+#define NMEA_PRINT(...) {  printf( __VA_ARGS__);};
 #else
 #define NMEA_PRINT(...) {};
 #endif
