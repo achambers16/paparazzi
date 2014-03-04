@@ -18,19 +18,19 @@ twog_1.0 + aspirin + ETS baro + ETS speed
       <configure name="AHRS_CORRECT_FREQUENCY" value="100"/>
       <define    name="AHRS_TRIGGERED_ATTITUDE_LOOP" />
 
-      <define name="USE_I2C0"/>
-      <define name="USE_BARO_ETS"/>
+      <define name="USE_I2C0" value="TRUE"/>
+      <define name="USE_BARO_ETS" value="TRUE"/>
     </target>
     <target name="sim" board="pc">
       <define name="INS_BARO_ID" value="BARO_SIM_SENDER_ID"/>
     </target>
 
-    <define name="USE_AIRSPEED"/>
-    <define name="USE_BAROMETER"/>
-    <define name="AGR_CLIMB"/>
-    <define name="STRONG_WIND"/>
-    <define name="WIND_INFO"/>
-    <define name="WIND_INFO_RET"/>
+    <define name="USE_AIRSPEED" value="TRUE"/>
+    <define name="USE_BAROMETER" value="TRUE"/>
+    <define name="AGR_CLIMB" value="TRUE"/>
+    <define name="STRONG_WIND" value="TRUE"/>
+    <define name="WIND_INFO" value="TRUE"/>
+    <define name="WIND_INFO_RET" value="TRUE"/>
 
     <subsystem name="radio_control" type="ppm"/>          <!-- Radio -->
     <subsystem name="gps" type="ublox"/>                  <!-- GPS -->

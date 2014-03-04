@@ -137,8 +137,8 @@ static void baro_cb(uint8_t __attribute__((unused)) sender_id, const float *pres
   if (ins_impl.reset_alt_ref) {
     ins_impl.reset_alt_ref = FALSE;
     ins_impl.alt = ground_alt;
-    ins_impl.alt_dot = 0.;
-    ins_impl.qfe = *pressure;
+    ins_impl.alt_dot = 0.;              // Set vertical speed to zero
+    ins_impl.qfe = *pressure;           // Set reference pressure
     alt_kalman_reset();
   }
   else { /* not realigning, so normal update with baro measurement */

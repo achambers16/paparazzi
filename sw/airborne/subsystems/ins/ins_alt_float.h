@@ -41,8 +41,8 @@ struct InsAltFloat {
   bool_t reset_alt_ref;  ///< flag to request reset of altitude reference to current alt
 
 #if USE_BAROMETER
-  float qfe;
-  float baro_alt;
+  float qfe;                ///< reference pressure (QFE) when height = 0 in Pascal (Pa)
+  float baro_alt;           ///< altitude calculated by pressure
   bool_t baro_initialized;
 #endif
 };

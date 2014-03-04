@@ -23,6 +23,8 @@
  * @file subsystems/ins/ins_gps_passthrough.c
  *
  * Simply passes GPS position and velocity through to the state interface.
+ * The GPS subsystem stores the data in non-standard units so the passthrough
+ * must convert units for vehicle state (SI units).
  */
 
 #include "subsystems/ins.h"
