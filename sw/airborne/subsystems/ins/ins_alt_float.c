@@ -257,10 +257,11 @@ static void alt_kalman(float z_meas) {
 
 
   /* predict */
+  /* The covariance matrix is symmetric so we can save some calculations */
   ins_impl.alt += ins_impl.alt_dot * DT;
-  p[0][0] = p[0][0]+p[1][0]*DT+DT*(p[0][1]+p[1][1]*DT) + SIGMA2*q[0][0];
+  p[0][0] = p[0][0]+2*p[0][1]*DT+p[1][1]*DT*DT + SIGMA2*q[0][0];
   p[0][1] = p[0][1]+p[1][1]*DT + SIGMA2*q[0][1];
-  p[1][0] = p[1][0]+p[1][1]*DT + SIGMA2*q[1][0];
+  p[1][0] = p[0][1];
   p[1][1] = p[1][1] + SIGMA2*q[1][1];
 
   /* error estimate */
