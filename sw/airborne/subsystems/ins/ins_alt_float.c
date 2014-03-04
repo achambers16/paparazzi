@@ -257,29 +257,29 @@ static void alt_kalman(float z_meas) {
 
 
   /* predict */
-  /* The covariance matrix is symmetric so we can save some calculations */
   ins_impl.alt += ins_impl.alt_dot * DT;
   p[0][0] = p[0][0]+2*p[0][1]*DT+p[1][1]*DT*DT + SIGMA2*q[0][0];
   p[0][1] = p[0][1]+p[1][1]*DT + SIGMA2*q[0][1];
-  p[1][0] = p[0][1];
+  p[1][0] = p[0][1];                // The covariance matrix is symmetric so we can save some calculations
   p[1][1] = p[1][1] + SIGMA2*q[1][1];
 
   /* error estimate */
-  float e = p[0][0] + R;
+  float e = p[0][0] + R;      // Innovation (or residual) covariance
 
   if (fabs(e) > 1e-5) {
     float k_0 = p[0][0] / e;
     float k_1 =  p[1][0] / e;
-    e = z_meas - ins_impl.alt;
+
+    e = z_meas - ins_impl.alt; // Innovation or measurement residual
 
     /* correction */
     ins_impl.alt += k_0 * e;
     ins_impl.alt_dot += k_1 * e;
 
-    p[1][0] = -p[0][0]*k_1+p[1][0];
-    p[1][1] = -p[0][1]*k_1+p[1][1];
     p[0][0] = p[0][0] * (1-k_0);
     p[0][1] = p[0][1] * (1-k_0);
+    p[1][0] = p[0][1];                // The covariance matrix is symmetric so we can save some calculations
+    p[1][1] = -p[0][1]*k_1+p[1][1];
   }
 
 #ifdef DEBUG_ALT_KALMAN
