@@ -4,7 +4,16 @@
 
   <firmware name="rotorcraft">
     <target name="ap" board="ardrone2_raw">
-      <define name="USE_INS_NAV_INIT"/>
+
+<!-- What is this? It appears to use the local lat/long for filter initialization? -->
+      <define name="USE_INS_NAV_INIT" value="TRUE"/> 
+
+      <define name="GPS_TIMEOUT" value="20" />
+
+<!-- Somehow uses the sonar for height -->
+<!--
+      <define name="USE_SONAR" value="TRUE"/> 
+-->
       <configure name="AHRS_PROPAGATE_FREQUENCY" value="200"/>
       <define name="AHRS_PROPAGATE_FREQUENCY" value="200"/>
       <define name="INS_PROPAGATE_FREQUENCY" value="200"/>
@@ -216,9 +225,11 @@
 
   <section name="GUIDANCE_H" prefix="GUIDANCE_H_">
     <!-- Good weather -->
+<!--
     <define name="MAX_BANK" value="20" unit="deg"/>
+-->
     <!-- Bad weather -->
-    <!-- define name="MAX_BANK" value="32" unit="deg"/ -->
+    <define name="MAX_BANK" value="32" unit="deg"/>
     <define name="PGAIN" value="79"/>
     <define name="DGAIN" value="100"/>
     <define name="IGAIN" value="60"/>
