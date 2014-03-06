@@ -6,10 +6,10 @@
 </header>
   <waypoints>
     <waypoint height="3." name="HOME" x="0.0" y="0.0"/>
-    <waypoint height="3." name="CLIMB" x="10.0" y="0.0"/>
-    <waypoint height="3." name="STDBY" x="10.0" y="0.0"/>
+    <waypoint height="3." name="CLIMB" x="0.0" y="0.0"/>
+    <waypoint height="3." name="STDBY" x="5.0" y="0.0"/>
     <waypoint height="3." name="delivery" x="15.0" y="15.0"/>
-    <waypoint height="3." name="TD" x="5.0" y="5.0"/>
+    <waypoint height="3." name="TD" x="5.0" y="0.0"/>
   </waypoints>
   <blocks>
     <block name="Wait GPS">
@@ -37,7 +37,10 @@
       <stay wp="STDBY"/>
     </block>
     <block name="Go to customer">
-      <stay wp="delivery"/>
+      <go from="STDBY" hmode="route" wp="delivery"/>
+      <stay wp="delivery" until="stage_time>20"/>
+      <go from="delivery" hmode="route" wp="STDBY"/>
+      <deroute block="land"/>
     </block>
     <block key="l" name="land here" strip_button="Land Here" strip_icon="land-right.png">
       <call fun="NavSetWaypointHere(WP_TD)"/>
