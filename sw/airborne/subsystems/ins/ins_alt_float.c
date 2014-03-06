@@ -206,45 +206,51 @@ static void alt_kalman_init(void) {
   alt_kalman_reset();
 }
 
+/**
+ * TODO:
+ * Use GPS position and velocity as a measurement and don't overwrite the state variable
+ * A different function to handle GPS and barometric measurement updates
+ * Manually calculate DT since it will change with different measurements
+ */
 static void alt_kalman(float z_meas) {
-  float DT = GPS_DT;
-  float R = GPS_R;
-  float SIGMA2 = GPS_SIGMA2;
+  float DT = GPS_DT;                // Delta time
+  float R = GPS_R;                  // GPS Z variance - We should be reading this off of the GPS directly since it changes vdop or something similar
+  float SIGMA2 = GPS_SIGMA2;        // Z acceleration variance - this should not change based on different sensors.
 
 #if USE_BAROMETER
 #ifdef SITL
   DT = BARO_SIM_DT;
   R = 0.5;
-  SIGMA2 = 0.1;
+  SIGMA2 = 0.1;                     // Might want to try different values in simulation
 #elif USE_BARO_MS5534A
   if (alt_baro_enabled) {
     DT = 0.1;
     R = baro_MS5534A_r;
-    SIGMA2 = baro_MS5534A_sigma2;
+//    SIGMA2 = baro_MS5534A_sigma2;
   }
 #elif USE_BARO_ETS
   if (baro_ets_enabled) {
     DT = BARO_ETS_DT;
     R = baro_ets_r;
-    SIGMA2 = baro_ets_sigma2;
+//    SIGMA2 = baro_ets_sigma2;
   }
 #elif USE_BARO_MS5611
   if (baro_ms5611_enabled) {
     DT = BARO_MS5611_DT;
     R = baro_ms5611_r;
-    SIGMA2 = baro_ms5611_sigma2;
+//    SIGMA2 = baro_ms5611_sigma2;
   }
 #elif USE_BARO_AMSYS
   if (baro_amsys_enabled) {
     DT = BARO_AMSYS_DT;
     R = baro_amsys_r;
-    SIGMA2 = baro_amsys_sigma2;
+//    SIGMA2 = baro_amsys_sigma2;
   }
 #elif USE_BARO_BMP
   if (baro_bmp_enabled) {
     DT = BARO_BMP_DT;
     R = baro_bmp_r;
-    SIGMA2 = baro_bmp_sigma2;
+//    SIGMA2 = baro_bmp_sigma2;
   }
 #endif
 #endif // USE_BAROMETER
@@ -264,13 +270,13 @@ static void alt_kalman(float z_meas) {
   p[1][1] = p[1][1] + SIGMA2*q[1][1];
 
   /* error estimate */
-  float e = p[0][0] + R;      // Innovation (or residual) covariance
+  float e = p[0][0] + R;            // Innovation (or residual) covariance
 
   if (fabs(e) > 1e-5) {
     float k_0 = p[0][0] / e;
     float k_1 =  p[1][0] / e;
 
-    e = z_meas - ins_impl.alt; // Innovation or measurement residual
+    e = z_meas - ins_impl.alt;        // Innovation or measurement residual
 
     /* correction */
     ins_impl.alt += k_0 * e;
