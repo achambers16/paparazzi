@@ -5,9 +5,9 @@
   <firmware name="rotorcraft">
     <target name="ap" board="ardrone2_raw">
 
-<!-- What is this? It appears to use the local lat/long for filter initialization? -->
+<!-- What is this? It appears to use the local lat/long for filter initialization? 
       <define name="USE_INS_NAV_INIT" value="TRUE"/> 
-
+-->
       <define name="GPS_TIMEOUT" value="20" />
 
 <!-- Somehow uses the sonar for height -->
@@ -34,7 +34,7 @@
     <subsystem name="gps" type="ublox"/>
     <subsystem name="stabilization" type="int_quat"/>
     <subsystem name="ahrs" type="int_cmpl_quat"/>
-    <subsystem name="ins" type="extended"/>
+    <subsystem name="ins" type="hff"/>
   </firmware>
 
   <modules main_freq="512">
