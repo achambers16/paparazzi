@@ -68,7 +68,7 @@ ssize_t full_write(int fd, const uint8_t *buf, size_t count)
     if (n < 0)
     {
       if (errno == EAGAIN || errno == EWOULDBLOCK)
-	continue;
+        continue;
       return n;
     }
     written += n;
@@ -87,7 +87,7 @@ ssize_t full_read(int fd, uint8_t *buf, size_t count)
     if (n < 0)
     {
       if (errno == EAGAIN || errno == EWOULDBLOCK)
-	continue;
+        continue;
       return n;
     }
     readed += n;
@@ -536,8 +536,8 @@ void navdata_update()
         // Check if there is a new sonar measurement and update the sonar
         if (navdata.ultrasound >> 15)
         {
-            sonar_meas = (navdata.ultrasound & 0x7FFF);
-            ins_update_sonar();
+          sonar_meas = (navdata.ultrasound & 0x7FFF);
+          ins_update_sonar();
         }
 #endif
 
