@@ -122,7 +122,8 @@ void gps_init(void) {
 }
 
 void gps_periodic_check(void) {
-  if (sys_time.nb_sec - gps.last_msg_time > GPS_TIMEOUT) {
+  if (sys_time.nb_sec - gps.last_3dfix_time > GPS_TIMEOUT) {
+    printf("gps_periodic_check: GPS_TIMEOUT\n");
     gps.fix = GPS_FIX_NONE;
   }
 }

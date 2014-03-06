@@ -42,7 +42,7 @@
 #define GPS_FIX_2D   0x02
 #define GPS_FIX_3D   0x03
 
-#define GpsFixValid() (gps.fix == GPS_FIX_3D || gps.fix == GPS_FIX_2D)
+#define GpsFixValid() (gps.fix == GPS_FIX_3D)
 
 
 #ifndef GPS_NB_CHANNELS
@@ -114,10 +114,12 @@ extern void gps_impl_init(void);
 inline bool_t GpsIsLost(void);
 
 inline bool_t GpsIsLost(void) {
-  if (GpsFixValid()) {
-    return FALSE;
-  }
-  return TRUE;
+  // GPS isn't lost until the timer is up
+  if (sys_time.nb_sec - gps.last_3dfix_time > GPS_TIMEOUT) {
+      return TRUE;
+    }
+
+  return FALSE;
 }
 
 /** Periodic GPS check.
