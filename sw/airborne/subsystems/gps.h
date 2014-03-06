@@ -42,7 +42,7 @@
 #define GPS_FIX_2D   0x02
 #define GPS_FIX_3D   0x03
 
-#define GpsFixValid() (gps.fix == GPS_FIX_3D)
+#define GpsFixValid() (gps.fix == GPS_FIX_3D || gps.fix == GPS_FIX_2D)
 
 
 #ifndef GPS_NB_CHANNELS
@@ -114,7 +114,7 @@ extern void gps_impl_init(void);
 inline bool_t GpsIsLost(void);
 
 inline bool_t GpsIsLost(void) {
-  if (gps.fix == GPS_FIX_3D) {
+  if (GpsFixValid()) {
     return FALSE;
   }
   return TRUE;
