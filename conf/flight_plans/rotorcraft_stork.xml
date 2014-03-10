@@ -10,6 +10,7 @@
     <waypoint height="5." name="STDBY" x="0.0" y="5.0"/>
     <waypoint height="5." name="delivery" x="10.0" y="10.0"/>
     <waypoint height="5." name="TD" x="0.0" y="5.0"/>
+    <waypoint height="5." name="STAYHERE" x="5.0" y="5.0"/>
   </waypoints>
   <blocks>
     <block name="Wait GPS">
@@ -42,6 +43,10 @@
       <stay wp="delivery" until="stage_time>20"/>
       <go from="delivery" hmode="route" wp="STDBY"/>
       <deroute block="Standby"/>
+    </block>
+    <block name="stay here">
+      <call fun="NavSetWaypointHere(WP_STAYHERE)"/>
+      <stay wp="STAYHERE"/>
     </block>
     <block key="l" name="land here" strip_button="Land Here" strip_icon="land-right.png">
       <call fun="NavSetWaypointHere(WP_TD)"/>
