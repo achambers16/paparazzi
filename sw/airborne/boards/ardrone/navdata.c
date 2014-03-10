@@ -437,7 +437,7 @@ static void magneto_monitoring_logic(void)
         {
         	reboot_lockout = TRUE;
 
-            printf("Magnetometer broken! Need to reboot it?\n");
+            //printf("Magnetometer broken! Need to reboot it?\n");
             system("/bin/restart_nav.sh&");
 
             /*
