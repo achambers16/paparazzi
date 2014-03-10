@@ -26,6 +26,7 @@
     </block>
     <block name="Start Engine">
       <call fun="NavResurrect()"/>
+      <call fun="NavSetWaypointHere(WP_CLIMB)"/>
       <attitude pitch="0" roll="0" throttle="0" until="FALSE" vmode="throttle"/>
     </block>
     <block name="Takeoff" strip_button="Takeoff" strip_icon="takeoff.png">
@@ -40,9 +41,7 @@
       <go from="STDBY" hmode="route" wp="delivery"/>
       <stay wp="delivery" until="stage_time>20"/>
       <go from="delivery" hmode="route" wp="STDBY"/>
-<!--
-      <deroute block="land"/>
--->
+      <deroute block="Standby"/>
     </block>
     <block key="l" name="land here" strip_button="Land Here" strip_icon="land-right.png">
       <call fun="NavSetWaypointHere(WP_TD)"/>
