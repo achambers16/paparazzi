@@ -51,6 +51,8 @@
 /conf/maps_data/*
 /conf/maps.xml
 /conf/gps/ublox_conf
+/conf/airframes/romotive
+/conf/flight_plans/romotive
 
 # /doc/pprz_algebra/
 /doc/pprz_algebra/headfile.log
