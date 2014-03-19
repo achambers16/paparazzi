@@ -33,7 +33,7 @@
 #include <stdio.h>
 
 #if DEBUG_GPS_UBX_UCENTER
-#define DEBUG_PRINT(...) printf(__VA_ARGS__)
+#define DEBUG_PRINT(...) {} // printf(__VA_ARGS__)
 #else
 #define DEBUG_PRINT(...) {}
 #endif
