@@ -53,6 +53,7 @@
 /conf/gps/ublox_conf
 /conf/airframes/romotive
 /conf/flight_plans/romotive
+/conf/telemetry/romotive
 
 # /doc/pprz_algebra/
 /doc/pprz_algebra/headfile.log
